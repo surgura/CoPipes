@@ -2,6 +2,7 @@
 #include <thread>
 #include <boost/asio.hpp>
 #include <iostream>
+#include <optional>
 
 namespace cp = Copipes;
 namespace asio = boost::asio;
@@ -9,7 +10,7 @@ namespace asio = boost::asio;
 class IntMaker : public cp::Pusher<int>
 {
     asio::io_context& io;
-    std::thread worker;
+    std::optional<std::thread> worker;
 
     void MakeInt()
     {
@@ -29,9 +30,9 @@ public:
     IntMaker(asio::io_context& io) : io(io) {}
     void Start()
     {
-        worker = {[this]() {
+        worker.emplace([this]() {
             MakeInt();
-        }};
+        });
     }
 };
 
@@ -53,7 +54,7 @@ int main()
     IntShower intShower;
 
     IntMaker intMaker(io);
-    intMaker.SetOutput(intShower);
+    intMaker.SetOutput<0>(intShower);
     intMaker.Start();
 
     io.run();
