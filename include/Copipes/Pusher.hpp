@@ -16,7 +16,7 @@ protected:
      // TODO
     }
 public:
-    template <typename INDEX>
+    template <size_t INDEX>
     void SetOutput(Sink<DataType>& sink)
     {
         this->sink[INDEX] = &sink;
