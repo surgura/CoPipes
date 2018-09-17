@@ -33,13 +33,17 @@ class Pusher<OutputType>
     Sink<OutputType>* sink;
 
 protected:
+    template <size_t index = 0>
     void Push(OutputType data, std::function<void()> onDone)
     {
+        static_assert(index == 0, "Index out of bounds");
         sink->Push(std::move(data), std::move(onDone));
     }
 public:
+    template <size_t index = 0>
     void SetOutput(Sink<OutputType>& sink)
     {
+        static_assert(index == 0, "Index out of bounds");
         this->sink = &sink;
     }
 };

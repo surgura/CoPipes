@@ -23,11 +23,27 @@ template<typename DataType, std::size_t OUTPUTS, std::size_t... Indices>
 struct PushSplit<DataType, OUTPUTS, std::index_sequence<Indices...>> : public Pusher<DependOn<DataType, Indices>...>, public Sink<DataType>
 {
     //using type = std::tuple<DependOn<T, Indices>...>;
+    DataType data;
+    std::function<void()> onDone;
+
+    template <size_t index>
+    void DoNextCallback()
+    {
+        if constexpr (index == OUTPUTS)
+            onDone();
+        else
+        {
+            Pusher<DependOn<DataType, Indices>...>::Push<index>(data, [this]() {
+                DoNextCallback<index+1>();
+            });
+        }
+    }
 public:
     void Push(DataType data, std::function<void()> onDone) override
     {
-        //Pusher<DataType, OUTPUTS>::Push(std::move(data), std::move(onDone));
-        // TODO
+        this->data = data;
+        this->onDone = onDone;
+        DoNextCallback<0>();
     }
 };
 
