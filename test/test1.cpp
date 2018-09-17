@@ -54,7 +54,7 @@ int main()
     IntShower intShower;
 
     IntMaker intMaker(io);
-    intMaker.SetOutput<0>(intShower);
+    intMaker.SetOutput(intShower);
     intMaker.Start();
 
     io.run();
