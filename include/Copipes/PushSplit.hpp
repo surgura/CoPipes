@@ -22,7 +22,6 @@ class PushSplit;
 template<typename DataType, std::size_t OUTPUTS, std::size_t... Indices>
 struct PushSplit<DataType, OUTPUTS, std::index_sequence<Indices...>> : public Pusher<DependOn<DataType, Indices>...>, public Sink<DataType>
 {
-    //using type = std::tuple<DependOn<T, Indices>...>;
     DataType data;
     std::function<void()> onDone;
 
