@@ -32,7 +32,7 @@ struct PushSplit<DataType, OUTPUTS, std::index_sequence<Indices...>> : public Pu
             onDone();
         else
         {
-            Pusher<DependOn<DataType, Indices>...>::Push<index>(data, [this]() {
+            Pusher<DependOn<DataType, Indices>...>::template Push<index>(data, [this]() {
                 DoNextCallback<index+1>();
             });
         }
